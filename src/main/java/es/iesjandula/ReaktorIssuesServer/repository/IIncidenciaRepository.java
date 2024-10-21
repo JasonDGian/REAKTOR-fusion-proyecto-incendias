@@ -58,7 +58,7 @@ public interface IIncidenciaRepository extends JpaRepository<IncidenciaEntity, I
 	 * @param comentario               Parte del comentario de la incidencia a buscar.
 	 * @return                        Una lista de objetos {@link IncidenciaDTO} que cumplen con los criterios de búsqueda.
 	 */
-	@Query("SELECT new ies.jandula.incidencia.dto.IncidenciaDTO("
+	@Query("SELECT new es.iesjandula.ReaktorIssuesServer.dto.IncidenciaDTO("
 			+ "e.numeroAula, e.correoDocente, e.fechaIncidencia, e.descripcionIncidencia, e.estadoIncidencia, e.comentario"
 			+ ") " + "FROM IncidenciaEntity e WHERE ( :numeroAula IS NULL OR e.numeroAula = :numeroAula ) AND "
 			+ "( :correoDocente IS NULL OR e.correoDocente = :correoDocente ) AND "
