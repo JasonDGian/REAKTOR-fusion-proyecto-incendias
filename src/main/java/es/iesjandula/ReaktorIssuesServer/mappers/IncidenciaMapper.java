@@ -1,9 +1,9 @@
-package es.jandula.ReaktorIssuesServer.mappers;
+package es.iesjandula.ReaktorIssuesServer.mappers;
 
 import org.springframework.stereotype.Component;
 
-import es.jandula.ReaktorIssuesServer.dto.IncidenciaDTO;
-import es.jandula.ReaktorIssuesServer.entity.IncidenciaEntity;
+import es.iesjandula.ReaktorIssuesServer.dto.IncidenciaDTO;
+import es.iesjandula.ReaktorIssuesServer.entity.IncidenciaEntity;
 import lombok.extern.slf4j.Slf4j;
 
 /**

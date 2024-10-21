@@ -1,4 +1,4 @@
-package es.jandula.ReaktorIssuesServer.repository;
+package es.iesjandula.ReaktorIssuesServer.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import es.jandula.ReaktorIssuesServer.dto.IncidenciaDTO;
-import es.jandula.ReaktorIssuesServer.entity.IncidenciaEntity;
-import es.jandula.ReaktorIssuesServer.entity.IncidenciaEntityId;
+import es.iesjandula.ReaktorIssuesServer.dto.IncidenciaDTO;
+import es.iesjandula.ReaktorIssuesServer.entity.IncidenciaEntity;
+import es.iesjandula.ReaktorIssuesServer.entity.IncidenciaEntityId;
 
 /**
  * Repositorio para gestionar incidencias en la base de datos.

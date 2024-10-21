@@ -1,4 +1,4 @@
-package es.jandula.ReaktorIssuesServer.dto;
+package es.iesjandula.ReaktorIssuesServer.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

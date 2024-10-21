@@ -1,4 +1,4 @@
-package es.jandula.ReaktorIssuesServer.entity;
+package es.iesjandula.ReaktorIssuesServer.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

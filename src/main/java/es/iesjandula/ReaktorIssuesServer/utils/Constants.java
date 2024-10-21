@@ -1,4 +1,4 @@
-package es.jandula.ReaktorIssuesServer.utils;
+package es.iesjandula.ReaktorIssuesServer.utils;
 
 /**
  * Clase que contiene constantes utilizadas en la aplicación.
