@@ -1,8 +1,8 @@
-package ies.jandula.incidencia.entity;
+package es.iesjandula.ReaktorIssuesServer.entity;
 
 import java.time.LocalDateTime;
 
-import ies.jandula.incidencia.utils.Constants;
+import es.iesjandula.ReaktorIssuesServer.utils.Constants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

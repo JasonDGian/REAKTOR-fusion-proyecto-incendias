@@ -1,4 +1,4 @@
-package ies.jandula.incidencia;
+package es.iesjandula.ReaktorIssuesServer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,14 +11,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * </p>
  */
 @SpringBootApplication
-public class IncidenciaApplication {
+public class ReaktorIssuesServerApplication {
 
 	/**
 	 * Metodo main que lanza la aplicación Spring en si misma.
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(IncidenciaApplication.class, args);
+		SpringApplication.run(ReaktorIssuesServerApplication.class, args);
 	}
 
 }

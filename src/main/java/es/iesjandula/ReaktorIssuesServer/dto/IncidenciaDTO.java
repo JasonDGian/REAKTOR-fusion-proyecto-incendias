@@ -1,4 +1,4 @@
-package ies.jandula.incidencia.dto;
+package es.iesjandula.ReaktorIssuesServer.dto;
 
 import java.time.LocalDateTime;
 
