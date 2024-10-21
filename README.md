@@ -149,6 +149,13 @@ Este endpoint permite borrar una incidencia específica de manera precisa, asegu
     
 ---    
     
+# TODO
+- Reordenar paqueteria para que respete paqueteria reactor (nombre proyecto y paquete principal).
+- Implementar Adquisición de hora para entidades basado en proyecto miguel (metodo get hora).
+- Implementar metodo adicional para gestión de estado de incidencias (sistema por pasos).
+- Implementar validación de correos basado en correose "@g.educaand.es"
+- Repasar y controlar excepciones.
+
 
 
 
