@@ -1,8 +1,7 @@
 package es.iesjandula.ReaktorIssuesServer.rest;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,29 +21,34 @@ import es.iesjandula.ReaktorIssuesServer.repository.IIncidenciaRepository;
 import es.iesjandula.ReaktorIssuesServer.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 
-
 /**
  * Controlador REST para gestionar incidencias en el sistema.
  * 
- * Esta clase proporciona endpoints para crear, actualizar, buscar y eliminar incidencias
- * en la base de datos. Utiliza un repositorio para interactuar con los datos de las incidencias
- * y un mapeador para convertir entre objetos DTO y entidades de base de datos.
+ * Esta clase proporciona endpoints para crear, actualizar, buscar y eliminar
+ * incidencias en la base de datos. Utiliza un repositorio para interactuar con
+ * los datos de las incidencias y un mapeador para convertir entre objetos DTO y
+ * entidades de base de datos.
  * 
- * Los métodos de esta clase devuelven respuestas adecuadas basadas en el resultado de
- * las operaciones, incluyendo códigos de estado HTTP para informar sobre el éxito o 
- * fracaso de las solicitudes. 
+ * Los métodos de esta clase devuelven respuestas adecuadas basadas en el
+ * resultado de las operaciones, incluyendo códigos de estado HTTP para informar
+ * sobre el éxito o fracaso de las solicitudes.
  * 
  * Las operaciones que se pueden realizar incluyen:
  * <ul>
- *     <li><strong>Crear Incidencia:</strong> Permite la creación de nuevas incidencias.</li>
- *     <li><strong>Actualizar Incidencia:</strong> Permite la actualización de incidencias existentes.</li>
- *     <li><strong>Buscar Incidencias:</strong> Permite buscar incidencias basadas en criterios específicos.</li>
- *     <li><strong>Eliminar Incidencia:</strong> Permite la eliminación de incidencias existentes.</li>
+ * <li><strong>Crear Incidencia:</strong> Permite la creación de nuevas
+ * incidencias.</li>
+ * <li><strong>Actualizar Incidencia:</strong> Permite la actualización de
+ * incidencias existentes.</li>
+ * <li><strong>Buscar Incidencias:</strong> Permite buscar incidencias basadas
+ * en criterios específicos.</li>
+ * <li><strong>Eliminar Incidencia:</strong> Permite la eliminación de
+ * incidencias existentes.</li>
  * </ul>
  * 
- * Se requiere que los encabezados y los cuerpos de las solicitudes contengan información válida 
- * para que las operaciones se ejecuten correctamente. En caso de errores, se devuelven 
- * mensajes informativos y códigos de estado HTTP adecuados.
+ * Se requiere que los encabezados y los cuerpos de las solicitudes contengan
+ * información válida para que las operaciones se ejecuten correctamente. En
+ * caso de errores, se devuelven mensajes informativos y códigos de estado HTTP
+ * adecuados.
  * 
  * @see FiltroBusqueda
  * @see IncidenciaDTO
@@ -128,12 +132,10 @@ public class IncidenciaController
 			incidencia.setComentario("");
 
 			incidencia.setDescripcionIncidencia(nuevaIncidenciaDTO.getDescripcionIncidencia());
-
-			// Hora local española.
-			ZonedDateTime currentTimeInSpain = ZonedDateTime.now(ZoneId.of("Europe/Madrid"));
-			LocalDateTime localDateTime = currentTimeInSpain.toLocalDateTime();
-
-			incidencia.setFechaIncidencia(localDateTime);
+		
+			Date today = new Date();
+			
+			incidencia.setFechaIncidencia(today);
 
 			log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
 
@@ -221,20 +223,27 @@ public class IncidenciaController
 	}
 
 	/**
-	 * Maneja las solicitudes GET para buscar incidencias en base a los criterios proporcionados en el filtro de búsqueda.
+	 * Maneja las solicitudes GET para buscar incidencias en base a los criterios
+	 * proporcionados en el filtro de búsqueda.
 	 * 
-	 * Este método recibe un objeto {@link FiltroBusqueda} que contiene los criterios de búsqueda para filtrar
-	 * las incidencias almacenadas. Realiza la búsqueda utilizando el repositorio correspondiente y devuelve 
-	 * una lista de incidencias que cumplen con los criterios. En caso de que no se encuentren incidencias,
-	 * se devuelve un mensaje informativo con un código de estado 404 (Not Found). Si ocurre algún error
-	 * durante el proceso, se devuelve un mensaje de error con un código de estado 500 (Internal Server Error).
+	 * Este método recibe un objeto {@link FiltroBusqueda} que contiene los
+	 * criterios de búsqueda para filtrar las incidencias almacenadas. Realiza la
+	 * búsqueda utilizando el repositorio correspondiente y devuelve una lista de
+	 * incidencias que cumplen con los criterios. En caso de que no se encuentren
+	 * incidencias, se devuelve un mensaje informativo con un código de estado 404
+	 * (Not Found). Si ocurre algún error durante el proceso, se devuelve un mensaje
+	 * de error con un código de estado 500 (Internal Server Error).
 	 *
-	 * @param f El objeto {@link FiltroBusqueda} que contiene los criterios de búsqueda para filtrar las incidencias.
+	 * @param f El objeto {@link FiltroBusqueda} que contiene los criterios de
+	 *          búsqueda para filtrar las incidencias.
 	 * @return Un objeto {@link ResponseEntity} que puede contener:
 	 *         <ul>
-	 *           <li>Una lista de {@link IncidenciaDTO} en caso de que se encuentren incidencias, con código de estado 200 (OK).</li>
-	 *           <li>Un mensaje de error si no se encuentran incidencias, con código de estado 404 (Not Found).</li>
-	 *           <li>Un mensaje de error general, en caso de excepciones inesperadas, con código de estado 500 (Internal Server Error).</li>
+	 *         <li>Una lista de {@link IncidenciaDTO} en caso de que se encuentren
+	 *         incidencias, con código de estado 200 (OK).</li>
+	 *         <li>Un mensaje de error si no se encuentran incidencias, con código
+	 *         de estado 404 (Not Found).</li>
+	 *         <li>Un mensaje de error general, en caso de excepciones inesperadas,
+	 *         con código de estado 500 (Internal Server Error).</li>
 	 *         </ul>
 	 */
 	@RequestMapping(method = RequestMethod.GET)
@@ -245,10 +254,32 @@ public class IncidenciaController
 			// Loguea los parametros recibidos
 			log.debug("DEBUG: Parametros de busqueda recibidos:\n {}", f.toString());
 
+			//todo:limpiar
+
+			Date fechainicioF;
+			Date fechafinF;
+					
+		   SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+			// Horas formateadas para consulta en bbdd.
+			if (f.getFechaInicio() == null || f.getFechaInicio().isBlank())
+			{
+				fechainicioF = formatter.parse("01-01-1979");
+			} else
+			{
+				fechainicioF = formatter.parse(f.getFechaInicio());
+			}
+			if (f.getFechaFin() == null || f.getFechaFin().isBlank())
+			{
+				fechafinF = formatter.parse("31-12-2099");
+			} else
+			{
+				fechafinF = formatter.parse(f.getFechaFin());
+			}
+
 			// Invoca el metodo con query personalizada para busqueda con nulos.
 			List<IncidenciaDTO> listado = iIncidenciaRepository.buscaIncidencia(f.getNumeroAula(), f.getCorreoDocente(),
-					f.getFechaInicio(), f.getFechaFin(), f.getDescripcionIncidencia(), f.getEstadoIncidencia(),
-					f.getComentario());
+					fechainicioF, fechafinF, f.getDescripcionIncidencia(), f.getEstadoIncidencia(), f.getComentario());
 
 			// Registra los elementos encontrados en la lista.
 			log.debug("DEBUG: Objetos encontrados {}", listado.size());

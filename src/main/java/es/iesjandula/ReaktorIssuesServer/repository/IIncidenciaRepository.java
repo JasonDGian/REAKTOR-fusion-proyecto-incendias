@@ -1,6 +1,7 @@
 package es.iesjandula.ReaktorIssuesServer.repository;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,7 +36,7 @@ public interface IIncidenciaRepository extends JpaRepository<IncidenciaEntity, I
 	 * @param fechaIncidencia     La fecha y hora en que ocurrió la incidencia.
 	 * @return                   {@code true} si la incidencia existe en la base de datos; {@code false} en caso contrario.
 	 */
-	public default boolean existsByCompositeId( String numeroAula, String correoDocente, LocalDateTime fechaIncidencia  ) {
+	public default boolean existsByCompositeId( String numeroAula, String correoDocente, Date fechaIncidencia  ) {
 		IncidenciaEntityId id = new IncidenciaEntityId( numeroAula, correoDocente, fechaIncidencia  );
 		return this.existsById(id);
 	}
@@ -62,18 +63,18 @@ public interface IIncidenciaRepository extends JpaRepository<IncidenciaEntity, I
 			+ "e.numeroAula, e.correoDocente, e.fechaIncidencia, e.descripcionIncidencia, e.estadoIncidencia, e.comentario"
 			+ ") " + "FROM IncidenciaEntity e WHERE ( :numeroAula IS NULL OR e.numeroAula = :numeroAula ) AND "
 			+ "( :correoDocente IS NULL OR e.correoDocente = :correoDocente ) AND "
-			+ "( :fechaInicio IS NULL OR :fechaInicio <= e.fechaIncidencia ) AND "
-			+ "( :fechaFin IS NULL OR :fechaFin >= e.fechaIncidencia ) AND "
+			+ "( (:fechaFin IS NULL) OR (:fechaInicio IS NULL) OR e.fechaIncidencia BETWEEN :fechaInicio AND :fechaFin ) AND "
 			+ "( :descripcionIncidencia IS NULL OR e.descripcionIncidencia LIKE CONCAT('%', :descripcionIncidencia, '%') ) AND "
 			+ "( :estadoIncidencia IS NULL OR e.estadoIncidencia = :estadoIncidencia ) AND "
 			+ "( :comentario IS NULL OR e.comentario LIKE CONCAT('%', :comentario, '%') )")
 	public List<IncidenciaDTO> buscaIncidencia(  
 			@Param("numeroAula") String numeroAula, 
 			@Param("correoDocente")String correoDocente, 
-			@Param("fechaInicio")LocalDateTime fechaInicio, 
-			@Param("fechaFin")LocalDateTime fechaFin, 
+			@Param("fechaInicio")Date fechaInicio, 
+			@Param("fechaFin")Date fechaFin, 
 			@Param("descripcionIncidencia")String descripcionIncidencia, 
 			@Param("estadoIncidencia")String estadoIncidencia, 
 			@Param("comentario")String comentario );
+	
 
 }

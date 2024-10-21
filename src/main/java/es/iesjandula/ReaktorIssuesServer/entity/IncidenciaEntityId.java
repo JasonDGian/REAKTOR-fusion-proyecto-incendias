@@ -1,7 +1,7 @@
 package es.iesjandula.ReaktorIssuesServer.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,6 +42,6 @@ public class IncidenciaEntityId implements Serializable
 	/**
 	 * Atributo Identificativo - Fecha de creación de la señalación.
 	 */
-	private LocalDateTime fechaIncidencia;
+	private Date fechaIncidencia;
 
 }

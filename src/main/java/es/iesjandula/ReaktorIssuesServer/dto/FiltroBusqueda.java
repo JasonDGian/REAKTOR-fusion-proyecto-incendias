@@ -45,7 +45,7 @@ public class FiltroBusqueda {
      * para las incidencias. Solo se considerarán incidencias registradas a
      * partir de esta fecha y hora.
      */
-    private LocalDateTime fechaInicio;
+    private String fechaInicio;
 
     /**
      * Atributo - Fecha de fin para filtrar las incidencias.
@@ -54,7 +54,7 @@ public class FiltroBusqueda {
      * para las incidencias. Solo se considerarán incidencias registradas
      * hasta esta fecha y hora.
      */
-    private LocalDateTime fechaFin;
+    private String fechaFin;
 
     /**
      * Atributo - Descripción de la incidencia para filtrar.
