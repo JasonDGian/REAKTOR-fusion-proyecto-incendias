@@ -1,4 +1,4 @@
-package ies.jandula.incidencia.rest;
+package es.jandula.ReaktorIssuesServer.rest;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ies.jandula.incidencia.dto.FiltroBusqueda;
-import ies.jandula.incidencia.dto.IncidenciaDTO;
-import ies.jandula.incidencia.entity.IncidenciaEntity;
-import ies.jandula.incidencia.mappers.IncidenciaMapper;
-import ies.jandula.incidencia.repository.IIncidenciaRepository;
-import ies.jandula.incidencia.utils.Constants;
+import es.jandula.ReaktorIssuesServer.dto.FiltroBusqueda;
+import es.jandula.ReaktorIssuesServer.dto.IncidenciaDTO;
+import es.jandula.ReaktorIssuesServer.entity.IncidenciaEntity;
+import es.jandula.ReaktorIssuesServer.mappers.IncidenciaMapper;
+import es.jandula.ReaktorIssuesServer.repository.IIncidenciaRepository;
+import es.jandula.ReaktorIssuesServer.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 
