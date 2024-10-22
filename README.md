@@ -150,10 +150,14 @@ Este endpoint permite borrar una incidencia específica de manera precisa, asegu
 ---    
     
 # TODO
-- Implementar Adquisición de hora para entidades basado en proyecto miguel (metodo get hora).
 - Implementar metodo adicional para gestión de estado de incidencias (sistema por pasos).
 - Implementar validación de correos basado en correos "@g.educaand.es"
 - Repasar y controlar excepciones.
+- Introducir variable en YAML para indicar que endpoints están a la escucha en CORS. -> Ver ejemplo printer server.
+- Modularizar los métodos de la clase IncidenciaController.
+- Revisa los catch de las excepciones.
+- Unificar la creacion de incidencia y la actualizacion. Mediante esta unificacion, liberar un verbo. Este verbo que sea usado en lugar del GET para el endpoint del filtro.
+- Controlar nomenclatura de clases y variables para que sean nombre significativos. Variable `f` en parametro filtro por ejemplo. 
 
 
 
