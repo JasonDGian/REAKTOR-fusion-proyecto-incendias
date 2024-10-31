@@ -31,14 +31,8 @@ public final class Constants
 	public static final String ESTADO_RESUELTA = "RESUELTA";
 	public static final String ESTADO_PENDIENTE = "PENDIENTE";
 
-	// Constantes para maximos de longitud de campo.
-		// Comentario de resolucion de incidencia.
-		public static final int MAX_LONG_COMENTARIO = 150;
-		// Estado de la incidencia.
-		public static final int MAX_LONG_ESTADO = 12;
-		// Correo del docente que señala.
-		public static final int MAX_LONG_CORREO = 50;
+	// Constantes para minimos de longitud de campo.
 		// Descripcion de la incidencia.
-		public static final int MAX_LONG_DESCRIPCION = 250;
+		public static final int MIN_LONG_DESCRIPCION = 15;
 
 }

@@ -72,74 +72,101 @@ public class IncidenciaController
 	IncidenciaMapper incidenciaMapper;
 
 	/**
-	 * Crea una nueva incidencia en el sistema.
+	 * Crear o actualizar una incidencia en el sistema.
 	 * 
 	 * Este método recibe un DTO que contiene la información de la incidencia a
-	 * crear y un encabezado que incluye el correo del docente. Se realiza la
+	 * crear o actualizar y un encabezado que incluye el correo del docente. Se realiza la
 	 * validación de los parámetros recibidos y, si son válidos, se crea una nueva
-	 * incidencia en la base de datos. Si los datos no son válidos, se devuelve un
+	 * incidencia o se actualiza en la base de datos. Si los datos no son válidos, se devuelve un
 	 * código de estado HTTP 400 (Bad Request). En caso de un error inesperado, se
 	 * devuelve un código de estado HTTP 500 (Internal Server Error).
 	 * 
 	 * @param correoDocente      El correo electrónico del docente, que se espera en
 	 *                           el encabezado de la solicitud. Este parámetro es
 	 *                           requerido y no puede ser nulo.
-	 * @param nuevaIncidenciaDTO El objeto DTO que contiene la información de la
-	 *                           incidencia a crear. Este parámetro es requerido y
+	 * @param incidenciaDTO El objeto DTO que contiene la información de la
+	 *                           incidencia a crear o actualizar. Este parámetro es requerido y
 	 *                           no puede ser nulo.
 	 * @return ResponseEntity<String> La respuesta que indica el resultado de la
-	 *         operación. Si la creación es exitosa, se devuelve un código de estado
-	 *         201 (Created) junto con un mensaje de éxito. Si hay un error de
-	 *         validación, se devuelve un código de estado 400 (Bad Request) con un
-	 *         mensaje de error. Si ocurre un error inesperado, se devuelve un
+	 *         operación. Si la creación o actualización es exitosa, se devuelve un código de estado
+	 *         201 (Created) junto con un mensaje de éxito en caso de haber sido creada o 200(OK) 
+	 *         en caso de ser actualizada.Si hay un error de validación, se devuelve 
+	 *         un código de estado 400 (Bad Request) con un mensaje de error. 
+	 *         Si ocurre un error inesperado, se devuelve un
 	 *         código de estado 500 (Internal Server Error) con un mensaje de error.
 	 */
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> crearIncidencia(
+	@RequestMapping(method = RequestMethod.PUT)
+	public ResponseEntity<String> crearActualizarIncidencia(
 			@RequestHeader(value = "correo-docente", required = true) String correoDocente,
-			@RequestBody(required = true) IncidenciaDTO nuevaIncidenciaDTO)
+			@RequestBody(required = true) IncidenciaDTO incidenciaDTO)
 	{
 		try
 		{
+			// Mensaje informativo a devolver
+			ResponseEntity<String> response = null;
+			
 			// Loguea los parametros recibidos para fines diagnosticos.
-			log.debug("Parametros recibidos:\n" + nuevaIncidenciaDTO.toString());
-
+			log.debug("Parametros recibidos:\n" + incidenciaDTO.toString());
+				
 			// Si el numero de aula está vacio o solo espacios.
-			if (nuevaIncidenciaDTO.getNumeroAula() == null || nuevaIncidenciaDTO.getNumeroAula().isBlank())
+			if (incidenciaDTO.getNumeroAula() == null || incidenciaDTO.getNumeroAula().isBlank())
 			{
 				log.error("Intento de creación de incidencia con numero de aula no definido");
 				return ResponseEntity.badRequest().body("ERROR: Numero de aula nulo o vacio.");
 			}
 
 			// Si la descripcion está vacia o solo espacios.
-			if (nuevaIncidenciaDTO.getDescripcionIncidencia() == null
-					|| nuevaIncidenciaDTO.getDescripcionIncidencia().isBlank())
+			if (incidenciaDTO.getDescripcionIncidencia() == null
+					|| incidenciaDTO.getDescripcionIncidencia().isBlank())
 			{
 				log.error("Intento de creación de incidencia con descripcion no definida");
 				return ResponseEntity.badRequest().body("ERROR: Descripcion de incidencia nulo o vacio.");
 			}
-
+			
 			// Si tanto numero de aula como descripción han sido definidos correctamente
 			// creamos nueva incidencia.
 			IncidenciaEntity incidencia = new IncidenciaEntity();
-
-			// Bloque de asignación de valores a objeto incidencia.
-			incidencia.setNumeroAula(nuevaIncidenciaDTO.getNumeroAula());
-
-			incidencia.setCorreoDocente(correoDocente);
-
-			incidencia.setEstadoIncidencia(Constants.ESTADO_PENDIENTE);
-
-			incidencia.setComentario("");
-
-			incidencia.setDescripcionIncidencia(nuevaIncidenciaDTO.getDescripcionIncidencia());
-		
-			Date today = new Date();
 			
-			incidencia.setFechaIncidencia(today);
+			
+			// Si no existe la incidencia
+			if(!iIncidenciaRepository.existsByCompositeId(incidenciaDTO.getNumeroAula(), 
+			incidenciaDTO.getCorreoDocente(), incidenciaDTO.getFechaIncidencia()))
+			{
+				// Objeto fecha de hoy
+				Date today = new Date();
+				
+				// Primer parametro  - Numero de Aula
+				// Segundo parametro - Correo del Docente
+				// Tercer parametro  - Fecha Actual
+				// Cuarto parametro  - Descripcion
+				// Quinto parametro  - Estado(Pendiente)
+				// Sexto parametro   - Comentario(Vacío)
+				incidencia = new IncidenciaEntity(
+						incidenciaDTO.getNumeroAula(), 
+						correoDocente, 
+						today,
+						incidenciaDTO.getDescripcionIncidencia(),
+						Constants.ESTADO_PENDIENTE,
+						"");
+			
+				// Información para indicar la inicializacion de la incidencia
+				log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
 
-			log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
-
+				// Informe de incidencia creada con exito
+				ResponseEntity.status(HttpStatus.CREATED).body("EXITO: Incidencia creada con exito");
+			}
+			else
+			{
+				// Mapear la incidencia
+				incidencia = incidenciaMapper.mapToEntity(incidenciaDTO);
+				
+				// Información para indicar la inicializacion de la incidencia
+				log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
+				
+				// Informe de incidencia actualizada con exito
+				ResponseEntity.status(HttpStatus.OK).body("EXITO: Incidencia actualizada con exito");
+			}
+			
 			// Finalmente guarda la incidencia en la BBDD.
 			iIncidenciaRepository.saveAndFlush(incidencia);
 
@@ -147,82 +174,19 @@ public class IncidenciaController
 			log.info("INFO: El objeto guardado en base de datos es:\n" + incidencia.toString());
 
 			// Informe a cliente del exito de la operacion.
-			return ResponseEntity.status(HttpStatus.CREATED).body("EXITO: Nueva incidencia creada con éxito.");
+			return response;
+
+		} catch (Exception e)
+		{
+			log.error("Excepción capturada en crearIncidencia(): {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error en la creación de incidencia.\n");
 		}
 		catch (Exception createIssueException)
 		{
 			String message = "Excepción capturada en crearIncidencia(): {}" + createIssueException.getMessage();
 			log.error(message, createIssueException);
 	        IssuesServerError serverError = new IssuesServerError(0, message, createIssueException);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
-		}
-	}
-
-	/**
-	 * Actualiza una incidencia existente en la base de datos basándose en los
-	 * detalles proporcionados en el DTO. Verifica primero si la incidencia existe.
-	 * Si no se encuentra, retorna un código de estado 404 (NOT_FOUND). Si se
-	 * encuentra, actualiza los datos y responde con un código 200 (OK).
-	 *
-	 * @param correoDocente      El correo del docente asociado a la incidencia,
-	 *                           extraído de la cabecera HTTP.
-	 * @param nuevaIncidenciaDTO El objeto {@link IncidenciaDTO} que contiene los
-	 *                           detalles actualizados de la incidencia. Los campos
-	 *                           clave (como número de aula, correo del docente y
-	 *                           fecha de incidencia) son obligatorios.
-	 * @return {@link ResponseEntity} con el código de estado correspondiente: - 200
-	 *         (OK) si la incidencia fue actualizada correctamente. - 404
-	 *         (NOT_FOUND) si la incidencia no fue encontrada en la base de datos. -
-	 *         400 (BAD_REQUEST) si los parámetros del DTO no son válidos. - 500
-	 *         (INTERNAL_SERVER_ERROR) en caso de errores inesperados.
-	 * @throws IllegalArgumentException si los parámetros del DTO son inválidos o
-	 *                                  nulos.
-	 */
-	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<?> actualizarIncidencia(
-			@RequestHeader(value = "correo-docente", required = true) String correoDocente,
-			@RequestBody(required = true) IncidenciaDTO nuevaIncidenciaDTO)
-	{
-		try
-		{
-			// Loguea los parametros recibidos para fines diagnosticos.
-			log.debug("Parametros recibidos:\n" + nuevaIncidenciaDTO.toString());
-
-			// Control de validez de objeto DTO recibido y mapeado a entidad incidencia.
-			// lanza IllegalArgumentException
-			IncidenciaEntity incidencia = incidenciaMapper.mapToEntity(nuevaIncidenciaDTO);
-			log.debug("DEBUG: Nueva incidencia mapeada desde DTO con éxito.\n " + incidencia.toString());
-
-			// Si no existen objetos con ese ID responde 404
-			if (!(iIncidenciaRepository.existsByCompositeId(incidencia.getNumeroAula(), incidencia.getCorreoDocente(),
-					incidencia.getFechaIncidencia())))
-			{
-				// En caso de que no exista la incidencia buscada.
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Incidencia no encontrada.");
-			}
-
-			// Finalmente guarda la incidencia en la BBDD.
-			iIncidenciaRepository.saveAndFlush(incidencia);
-
-			// Información para registro.
-			log.info("INFO: Objeto actualizado:\n" + incidencia.toString());
-
-			// Informe a cliente del exito de la operacion.
-			return ResponseEntity.status(HttpStatus.OK).body("EXITO: Incidencia modificada con exito.");
-
-		}
-		catch (IllegalArgumentException illegalArgumentException)
-		{
-			String message ="ERROR: Error en parametros del objeto recibido en actualizarIncidencia().\n{}" + illegalArgumentException.getMessage();
-			log.error(message, illegalArgumentException);
-			IssuesServerError serverError = new IssuesServerError(1, message, illegalArgumentException);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(serverError.getMapError());
-		}
-		catch (Exception updateIssueException)
-		{
-			String message ="Excepción capturada en actualizarIncidencia(): {}" + updateIssueException.getMessage();
-			log.error(message, updateIssueException);
-	        IssuesServerError serverError = new IssuesServerError(2, message, updateIssueException);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
 		}
 	}
@@ -239,7 +203,7 @@ public class IncidenciaController
 	 * (Not Found). Si ocurre algún error durante el proceso, se devuelve un mensaje
 	 * de error con un código de estado 500 (Internal Server Error).
 	 *
-	 * @param f El objeto {@link FiltroBusqueda} que contiene los criterios de
+	 * @param filtro El objeto {@link FiltroBusqueda} que contiene los criterios de
 	 *          búsqueda para filtrar las incidencias.
 	 * @return Un objeto {@link ResponseEntity} que puede contener:
 	 *         <ul>
@@ -251,40 +215,41 @@ public class IncidenciaController
 	 *         con código de estado 500 (Internal Server Error).</li>
 	 *         </ul>
 	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> buscaIncidencia(@RequestBody FiltroBusqueda f)
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<?> buscaIncidencia(@RequestBody FiltroBusqueda filtroBusqueda)
 	{
 		try
 		{
 			// Loguea los parametros recibidos
-			log.debug("DEBUG: Parametros de busqueda recibidos:\n {}", f.toString());
+			log.debug("DEBUG: Parametros de busqueda recibidos:\n {}", filtroBusqueda.toString());
 
-			//todo:limpiar
-
+			// Fecha inicio para el filtrado
 			Date fechainicioF;
+			// Fecha fin para el filtrado
 			Date fechafinF;
 					
+			// Formateador de fecha
 		   SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
 			// Horas formateadas para consulta en bbdd.
-			if (f.getFechaInicio() == null || f.getFechaInicio().isBlank())
+			if (filtroBusqueda.getFechaInicio() == null || filtroBusqueda.getFechaInicio().isBlank())
 			{
 				fechainicioF = formatter.parse("01-01-1979");
 			} else
 			{
-				fechainicioF = formatter.parse(f.getFechaInicio());
+				fechainicioF = formatter.parse(filtroBusqueda.getFechaInicio());
 			}
-			if (f.getFechaFin() == null || f.getFechaFin().isBlank())
+			if (filtroBusqueda.getFechaFin() == null || filtroBusqueda.getFechaFin().isBlank())
 			{
 				fechafinF = formatter.parse("31-12-2099");
 			} else
 			{
-				fechafinF = formatter.parse(f.getFechaFin());
+				fechafinF = formatter.parse(filtroBusqueda.getFechaFin());
 			}
 
 			// Invoca el metodo con query personalizada para busqueda con nulos.
-			List<IncidenciaDTO> listado = iIncidenciaRepository.buscaIncidencia(f.getNumeroAula(), f.getCorreoDocente(),
-					fechainicioF, fechafinF, f.getDescripcionIncidencia(), f.getEstadoIncidencia(), f.getComentario());
+			List<IncidenciaDTO> listado = iIncidenciaRepository.buscaIncidencia(filtroBusqueda.getNumeroAula(), filtroBusqueda.getCorreoDocente(),
+					fechainicioF, fechafinF, filtroBusqueda.getDescripcionIncidencia(), filtroBusqueda.getEstadoIncidencia(), filtroBusqueda.getComentario());
 
 			// Registra los elementos encontrados en la lista.
 			log.debug("DEBUG: Objetos encontrados {}", listado.size());

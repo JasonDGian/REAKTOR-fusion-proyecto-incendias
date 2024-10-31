@@ -46,7 +46,7 @@ public class IncidenciaEntity
      * Este atributo es parte del identificador compuesto de la incidencia.
      */
 	@Id
-	@Column(length = Constants.MAX_LONG_CORREO)
+	@Column()
 	private String correoDocente;
 
     /**
@@ -62,7 +62,7 @@ public class IncidenciaEntity
      * 
      * Este atributo contiene una descripción del problema que se ha reportado.
      */
-	@Column(length = Constants.MAX_LONG_DESCRIPCION)
+	@Column(length = Constants.MIN_LONG_DESCRIPCION)
 	private String descripcionIncidencia;
 
     /**
@@ -71,7 +71,7 @@ public class IncidenciaEntity
      * Este atributo puede tomar valores como "EN PROGRESO", "CANCELADA", 
      * "RESUELTA" o "PENDIENTE".
      */
-	@Column(length = Constants.MAX_LONG_ESTADO)
+	@Column()
 	private String estadoIncidencia;
 	
     /**
@@ -80,7 +80,7 @@ public class IncidenciaEntity
      * Este atributo permite incluir notas adicionales sobre la resolución de 
      * la incidencia.
      */
-	@Column(length = Constants.MAX_LONG_COMENTARIO)
+	@Column()
 	private String comentario;
 
 }
