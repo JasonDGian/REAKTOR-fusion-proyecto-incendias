@@ -119,8 +119,8 @@ public class IncidenciaController
 			if (incidenciaDTO.getDescripcionIncidencia() == null
 					|| incidenciaDTO.getDescripcionIncidencia().isBlank())
 			{
-				log.error("Intento de creación de incidencia con descripcion no definida");
-				return ResponseEntity.badRequest().body("ERROR: Descripcion de incidencia nulo o vacio.");
+				log.error("Intento de creación de incidencia con descripcion no definida o menor de 15 caracteres");
+				return ResponseEntity.badRequest().body("ERROR: Descripcion de incidencia nulo, vacio o menor de 15 caracteres.");
 			}
 			
 			// Si tanto numero de aula como descripción han sido definidos correctamente
