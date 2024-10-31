@@ -19,6 +19,7 @@ import es.iesjandula.ReaktorIssuesServer.entity.IncidenciaEntity;
 import es.iesjandula.ReaktorIssuesServer.mappers.IncidenciaMapper;
 import es.iesjandula.ReaktorIssuesServer.repository.IIncidenciaRepository;
 import es.iesjandula.ReaktorIssuesServer.utils.Constants;
+import es.iesjandula.ReaktorIssuesServer.utils.IssuesServerError;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -94,7 +95,7 @@ public class IncidenciaController
 	 *         código de estado 500 (Internal Server Error) con un mensaje de error.
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<String> crearIncidencia(
+	public ResponseEntity<?> crearIncidencia(
 			@RequestHeader(value = "correo-docente", required = true) String correoDocente,
 			@RequestBody(required = true) IncidenciaDTO nuevaIncidenciaDTO)
 	{
@@ -147,14 +148,14 @@ public class IncidenciaController
 
 			// Informe a cliente del exito de la operacion.
 			return ResponseEntity.status(HttpStatus.CREATED).body("EXITO: Nueva incidencia creada con éxito.");
-
-		} catch (Exception e)
-		{
-			log.error("Excepción capturada en crearIncidencia(): {}", e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error en la creación de incidencia.\n");
 		}
-
+		catch (Exception createIssueException)
+		{
+			String message = "Excepción capturada en crearIncidencia(): {}" + createIssueException.getMessage();
+			log.error(message, createIssueException);
+	        IssuesServerError serverError = new IssuesServerError(0, message, createIssueException);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
+		}
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class IncidenciaController
 	 *                                  nulos.
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<String> actualizarIncidencia(
+	public ResponseEntity<?> actualizarIncidencia(
 			@RequestHeader(value = "correo-docente", required = true) String correoDocente,
 			@RequestBody(required = true) IncidenciaDTO nuevaIncidenciaDTO)
 	{
@@ -209,17 +210,21 @@ public class IncidenciaController
 			// Informe a cliente del exito de la operacion.
 			return ResponseEntity.status(HttpStatus.OK).body("EXITO: Incidencia modificada con exito.");
 
-		} catch (IllegalArgumentException e)
-		{
-			log.error("ERROR: Error en parametros del objeto recibido en actualizarIncidencia().\n{}", e);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		} catch (Exception e)
-		{
-			log.error("Excepción capturada en actualizarIncidencia(): {}", e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error en la actualizacion de incidencia.\n " + e.getMessage());
 		}
-
+		catch (IllegalArgumentException illegalArgumentException)
+		{
+			String message ="ERROR: Error en parametros del objeto recibido en actualizarIncidencia().\n{}" + illegalArgumentException.getMessage();
+			log.error(message, illegalArgumentException);
+			IssuesServerError serverError = new IssuesServerError(1, message, illegalArgumentException);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(serverError.getMapError());
+		}
+		catch (Exception updateIssueException)
+		{
+			String message ="Excepción capturada en actualizarIncidencia(): {}" + updateIssueException.getMessage();
+			log.error(message, updateIssueException);
+	        IssuesServerError serverError = new IssuesServerError(2, message, updateIssueException);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
+		}
 	}
 
 	/**
@@ -296,11 +301,13 @@ public class IncidenciaController
 			// encontrados.
 			return ResponseEntity.status(HttpStatus.OK).body(listado);
 
-		} catch (Exception e)
+		}
+		catch (Exception searchIssueException)
 		{
-			log.error("ERROR: Capturado en buscaIncidencia()\n {}", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("ERROR: Capturado en buscaIncidencia()\n " + e);
+			String message = "ERROR: Capturado en buscaIncidencia()\n {}" + searchIssueException.getMessage();
+			log.error(message, searchIssueException);
+			IssuesServerError serverError = new IssuesServerError(3, message, searchIssueException);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
 		}
 	}
 
@@ -321,7 +328,7 @@ public class IncidenciaController
 	 * @throws IllegalArgumentException si los parámetros del DTO son inválidos.
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
-	public ResponseEntity<String> borraIncidencia(@RequestBody(required = true) IncidenciaDTO dto)
+	public ResponseEntity<?> borraIncidencia(@RequestBody(required = true) IncidenciaDTO dto)
 	{
 		try
 		{
@@ -345,17 +352,20 @@ public class IncidenciaController
 
 		}
 		// Error en parametros DTO u objeto nulo.
-		catch (IllegalArgumentException e)
+		catch (IllegalArgumentException illegalArgumentException)
 		{
-			log.error("ERROR: Error en parametros del objeto recibido en borraIncidencia().\n{}", e);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			String message = "ERROR: Error en parametros del objeto recibido en borraIncidencia().\n{}" + illegalArgumentException.getMessage();
+			log.error(message, illegalArgumentException);
+			IssuesServerError serverError = new IssuesServerError(1, message, illegalArgumentException);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(serverError.getMapError());
 		}
 		// Captura de errores no esperados o calculados.
-		catch (Exception e)
+		catch (Exception deleteIssueException)
 		{
-			log.error("Error inesperado en borraIncidencia() .\nMensaje de error: ", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+			String message = "Error inesperado en borraIncidencia() .\nMensaje de error: " + deleteIssueException.getMessage();
+			log.error(message, deleteIssueException);
+			IssuesServerError serverError = new IssuesServerError(4, message, deleteIssueException);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(serverError.getMapError());
 		}
 	}
-
 }
