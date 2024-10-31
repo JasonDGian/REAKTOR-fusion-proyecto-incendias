@@ -1,6 +1,8 @@
 package es.iesjandula.ReaktorIssuesServer.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +36,8 @@ public class IncidenciaDTO
 	/**
 	 * Atribtuo - Fecha de creación de la señalación.
 	 */
-	private LocalDateTime fechaIncidencia;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+	private Date fechaIncidencia;
 
 	/**
 	 * Atribtuo - Detalla el problema relacionado a la incidencia.
