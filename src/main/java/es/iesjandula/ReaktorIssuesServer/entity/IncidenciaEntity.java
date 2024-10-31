@@ -62,7 +62,7 @@ public class IncidenciaEntity
      * 
      * Este atributo contiene una descripción del problema que se ha reportado.
      */
-	@Column(length = Constants.MIN_LONG_DESCRIPCION)
+	@Column(length = Constants.MIN_LONG_DESCRIPCION, columnDefinition = "TEXT")
 	private String descripcionIncidencia;
 
     /**
@@ -80,7 +80,7 @@ public class IncidenciaEntity
      * Este atributo permite incluir notas adicionales sobre la resolución de 
      * la incidencia.
      */
-	@Column()
+	@Column(columnDefinition = "TEXT")
 	private String comentario;
 
 }
