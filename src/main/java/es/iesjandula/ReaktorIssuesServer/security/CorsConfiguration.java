@@ -1,8 +1,9 @@
 package es.iesjandula.ReaktorIssuesServer.security;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -16,32 +17,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * </p>
  */
 @Configuration
-public class CorsConfiguration
+@EnableWebMvc // Anotación que sirve para 
+public class CorsConfiguration implements WebMvcConfigurer
 {
-	
-    /**
-     * Configura las reglas CORS para el endpoint "/incidencias".
-     * <p>
-     * Este método devuelve una implementación de {@link WebMvcConfigurer} que sobrescribe el método
-     * {@code addCorsMappings} para permitir el intercambio de recursos entre orígenes en el endpoint "/incidencias".
-     * </p>
-     *
-     * @return una instancia de {@link WebMvcConfigurer} con la configuración CORS personalizada.
-     */
-	@Bean
-	public WebMvcConfigurer corsConfigurer()
-	{
 
-		return new WebMvcConfigurer()
-		{
-			@Override
-			public void addCorsMappings(CorsRegistry registry)
-			{
-				// Configura el mapeo CORS para el endpoint /incidencias
-				// Esto para poder montar luego el frontend.
-				registry.addMapping("/incidencias");
-			}
-		};
+/**
+ * Define a que URL atiende de manera abierta la API mediante tecnicas CORS.
+ */
+@Value("${urlCors}")
+private String urlCors; // Actualmente solo una string porque la variable urlcors solo contiene una url.
 
-	}
+// Configuración del mapeado de CORS
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping(urlCors)
+            .allowedMethods("PUT", "DELETE", "POST", "GET");
+    }
+
 }
