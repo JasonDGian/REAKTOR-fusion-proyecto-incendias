@@ -96,7 +96,7 @@ public class IncidenciaController
 	 *         código de estado 500 (Internal Server Error) con un mensaje de error.
 	 */
 	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<String> crearActualizarIncidencia(
+	public ResponseEntity<?> crearActualizarIncidencia(
 			@RequestHeader(value = "correo-docente", required = true) String correoDocente,
 			@RequestBody(required = true) IncidenciaDTO incidenciaDTO)
 	{
@@ -176,11 +176,6 @@ public class IncidenciaController
 			// Informe a cliente del exito de la operacion.
 			return response;
 
-		} catch (Exception e)
-		{
-			log.error("Excepción capturada en crearIncidencia(): {}", e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error en la creación de incidencia.\n");
 		}
 		catch (Exception createIssueException)
 		{
