@@ -9,19 +9,14 @@ Este servicio maneja las solicitudes HTTP relacionadas con la creación, actuali
       <th>DESCRIPCION</th>
    </tr>
    <tr>
-      <td>🟢 GET</td>
+      <td>🟡 POST</td>
       <td>/incidencias</td>
       <td>Obtiene una lista de incidencias basada en los parámetros del cuerpo Json de la solicitud.</td>
    </tr>
    <tr>
-      <td>🟡 POST</td>
-      <td>/incidencias</td>
-      <td>Crea una nueva incidencia en el sistema.</td>
-   </tr>
-   <tr>
       <td>🔵 PUT</td>
       <td>/incidencias</td>
-      <td>Actualiza una incidencia existente según los datos del cuerpo de la solicitud.</td>
+      <td>Crea una nueva incidencia en el sistema. Si los campos identificativos pertenecen a una incidencia que ya existe en el sistema, en lugar de eso actualizará sus datos.</td>
    </tr>
    <tr>
       <td>🔴 DEL</td>
@@ -54,8 +49,10 @@ A continuación el listado de endpoints expuestos actualmente y los parámetros 
    
 ---
    
-### 🟡 POST - Crear nueva incidencia.
-Este endpoint permite registrar nuevas incidencias en el sistema con los datos proporcionados por el docente.
+### 🔵 PUT - Crear nueva incidencia / Actualiza incidencia existente.
+Este endpoint permite registrar nuevas incidencias en el sistema con los datos proporcionados por el docente. Además permite modificar una incidencia existente, sobreescribiendo los datos previos con los nuevos detalles proporcionados en el cuerpo de la solicitud (No permite cambios en los campos identificativos de la incidencia). 
+
+🔸 **Crear incidencia**
 ```
 localhost:8888/incidencias
 ```
@@ -66,8 +63,6 @@ localhost:8888/incidencias
 2. **Cuerpo de la petición (body):** Debe incluir los siguientes datos:
       - `numeroAula`: El número del aula donde se ha detectado la incidencia.
       - `descripcionIncidencia`: La descripción de la incidencia detectada. -->
-
-
    
 **Requiere cabecera:**
 ```json
@@ -80,10 +75,26 @@ localhost:8888/incidencias
 "descripcionIncidencia" : "<valor_descripcion_incidencia>"
 }
 ```
+
+🔸 **Actualizar Incidencia**
+**Requiere cuerpo:**   
+   
+```json
+   {
+   "numeroAula": "<valor_numero_aula>",
+   "correoDocente": "<valor_correo_docente>",
+   "fechaInicio": "<valor_fecha_inicio>",
+   "fechaFin": "<valor_fecha_fin>",
+   "descripcionIncidencia": "<valor_descripcion_incidencia>",
+   "estadoIncidencia": "<valor_estado_incidencia>",
+   "comentario": "<valor_comentario>"
+   }
+```
+   
       
 ---    
     
-### 🟢 GET - Filtra incidencias.
+### 🟡 POST - Filtra incidencias.
 ```
 localhost:8888/incidencias
 ```
@@ -102,28 +113,7 @@ Endpoint que permite recuperar una **lista** de incidencias basandose en una ser
 }
 
 ```
-      
----    
-    
-### 🔵 PUT - Actualiza incidencia existente.
-```
-localhost:8888/incidencias
-```
-Este endpoint permite modificar una incidencia existente, sobreescribiendo los datos previos con los nuevos detalles proporcionados en el cuerpo de la solicitud. No permite cambios en los campos identificativos de la incidencia.
-   
-**Requiere cuerpo:**
-```json
-{
-  "numeroAula": "<valor_numero_aula>",
-  "correoDocente": "<valor_correo_docente>",
-  "fechaInicio": "<valor_fecha_inicio>",
-  "fechaFin": "<valor_fecha_fin>",
-  "descripcionIncidencia": "<valor_descripcion_incidencia>",
-  "estadoIncidencia": "<valor_estado_incidencia>",
-  "comentario": "<valor_comentario>"
-}
-```
-         
+               
 ---    
      
     
@@ -147,18 +137,6 @@ Este endpoint permite borrar una incidencia específica de manera precisa, asegu
 
 ```
     
----    
-    
-# TODO
-- Implementar metodo adicional para gestión de estado de incidencias (sistema por pasos).
-- Implementar validación de correos basado en correos "@g.educaand.es"
-- Repasar y controlar excepciones.
-- Introducir variable en YAML para indicar que endpoints están a la escucha en CORS. -> Ver ejemplo printer server.
-- Modularizar los métodos de la clase IncidenciaController.
-- Revisa los catch de las excepciones.
-- Unificar la creacion de incidencia y la actualizacion. Mediante esta unificacion, liberar un verbo. Este verbo que sea usado en lugar del GET para el endpoint del filtro.
-- Controlar nomenclatura de clases y variables para que sean nombre significativos. Variable `f` en parametro filtro por ejemplo. 
-
-
+--- 
 
 
