@@ -153,7 +153,7 @@ public class IncidenciaController
 				log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
 
 				// Informe de incidencia creada con exito
-				ResponseEntity.status(HttpStatus.CREATED).body("EXITO: Incidencia creada con exito");
+				response = ResponseEntity.status(HttpStatus.CREATED).body("EXITO: Incidencia creada con exito");
 			}
 			else
 			{
@@ -164,7 +164,7 @@ public class IncidenciaController
 				log.debug("DEBUG: Objeto incidencia inicializado correctamente:\n " + incidencia.toString());
 				
 				// Informe de incidencia actualizada con exito
-				ResponseEntity.status(HttpStatus.OK).body("EXITO: Incidencia actualizada con exito");
+				response = ResponseEntity.status(HttpStatus.OK).body("EXITO: Incidencia actualizada con exito");
 			}
 			
 			// Finalmente guarda la incidencia en la BBDD.
