@@ -1,9 +1,10 @@
 package es.iesjandula.ReaktorIssuesServer.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import es.iesjandula.ReaktorIssuesServer.utils.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
