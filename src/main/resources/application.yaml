@@ -1,7 +1,7 @@
 spring:
   jpa.hibernate.ddl-auto: update # Configura cómo se debe gestionar el esquema de la base de datos.
   datasource:
-    url: jdbc:mysql://localhost:3306/incidencias # URL de conexión a la base de datos MySQL.
+    url: jdbc:mysql://localhost:3306/incidencias?createDatabaseIfNotExist=true # URL de conexión a la base de datos MySQL.
     username: root # Nombre de usuario para conectarse a la base de datos.
     password: 1234 # Contraseña correspondiente al usuario especificado.
     hikari: # Hikari es un mecanismo de eficiencia de conexiones. Conocido como "Pool de conexiones".
