@@ -37,7 +37,7 @@ public class IncidenciaDTO
 	/**
 	 * Atribtuo - Fecha de creación de la señalación.
 	 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date fechaIncidencia;
 
 	/**
